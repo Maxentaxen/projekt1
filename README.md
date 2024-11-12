@@ -32,7 +32,7 @@ This Arduino-based project reads the current time from a DS3231 real-time clock 
 
 ## Setup
 1. **Install Libraries**:
-   - Install RTClib and U8glib libraries in the Arduino IDE via the Library Manager.
+   - Install `RTClib` and `U8glib` libraries in the Arduino IDE via the Library Manager.
 2. **Connect Hardware** according to the wiring table above.
 3. **Upload Code** to your Arduino.
 
@@ -48,19 +48,19 @@ This Arduino-based project reads the current time from a DS3231 real-time clock 
 - **RGB LED Color Control**: Changes the RGB LED color based on the current hour, minute, and second values.
 
 ### Functions
-- getTime(): Retrieves the current time from the RTC and formats it.
-- getTemp()`: Reads the temperature sensor and calculates temperature in Celsius.
-- oledWrite(x1, y1, text1, x2, y2, text2)`: Writes text to specified coordinates on the OLED display.
-- isPrime(n)`: Checks if a number is prime.
-- getSeconds(), getHours(), getMinutes(): Returns the current seconds, hours, and minutes.
-- setColor(red, green, blue): Sets the color of the RGB LED.
+- `getTime()`: Retrieves the current time from the RTC and formats it.
+- `getTemp()`: Reads the temperature sensor and calculates temperature in Celsius.
+- `oledWrite(x1, y1, text1, x2, y2, text2)`: Writes text to specified coordinates on the OLED display.
+- `isPrime(n)`: Checks if a number is prime.
+- `getSeconds()`, `getHours()`, `getMinutes()`: Returns the current seconds, hours, and minutes.
+- `setColor(red, green, blue)`: Sets the color of the RGB LED.
 
 ## Example Output
 The OLED screen will display:
-
+```
 Time: HH:MM:SS
 Temp: XX.X °C
-
+```
 
 The RGB LED changes color based on the time, and the prime indicator LED turns on when the current second is a prime number.
 
