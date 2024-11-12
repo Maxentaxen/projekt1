@@ -38,26 +38,26 @@ void setup() {
 void loop() {
   // Constantly write time and temperature
 
-  oledWrite(0, 10, "Time: "+ getTime(), 0, 40, "Temp: " + String(getTemp()) + char(176) + "C"); 
-  // Turn led on if second are prime
+  oledWrite(0, 10, "Time: " + getTime(), 0, 40, "Temp: " + String(getTemp()) + char(176) + "C");
+  // Turn led on if the number of seconds is prime
   if (isPrime(getSeconds()) == 1) {
     digitalWrite(ledPin, HIGH);
   } else {
     digitalWrite(ledPin, LOW);
   }
-  
-  // Set RGB led color to the current time 
-  setColor(map(getHours(), 0, 24, 0, 255), 
-           map(getMinutes(), 0, 60, 0, 255), 
+
+  // Set RGB led color to the current time
+  setColor(map(getHours(), 0, 24, 0, 255),
+           map(getMinutes(), 0, 60, 0, 255),
            map(getSeconds(), 0, 60, 0, 255));
   delay(500);
 }
 
 
 /*
-*This function reads time from an ds3231 module and package the time as a String
-*Parameters: Void
-*Returns: time in hh:mm:ss as String and if minutes or seconds are below 10, hh:0m:0s
+* This function reads time from an ds3231 module and package the time as a String
+* Parameters: Void
+* Returns: time in hh:mm:ss as String and if minutes or seconds are below 10, hh:0m:0s
 */
 String getTime() {
   DateTime now = rtc.now();
@@ -78,8 +78,8 @@ String getTime() {
 
 /*
 * This function reads an analog pin connected to an analog temprature sensor and calculates the corresponding temp
-*Parameters: Void
-*Returns: temprature as float
+* Parameters: Void
+* Returns: temprature as float
 */
 
 float getTemp() {
@@ -100,7 +100,7 @@ float getTemp() {
 }
 
 /*
-* This function takes two strings and coordinates and draws them to an oled screen
+* This function takes two strings and coordinates and draws them to an oled screen at those locations
 *Parameters: x1, y1: coordinates of first text. text1: first text as a string
 *            x2, y2: coordinates of second text. text2: second text as a string
 *Returns: void
