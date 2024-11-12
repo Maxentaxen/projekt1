@@ -37,14 +37,15 @@ void setup() {
 
 void loop() {
   // Constantly write time and temperature
-  oledWrite(0, 10, "Time: "+ getTime(), 0, 40, "Temp: " + String(getTemp())); 
-  //Turn led on if second are prime
+  oledWrite(0, 10, "Time: "+ getTime(), 0, 40, "Temp: " + String(getTemp()) + char(176) + "C"); 
+  // Turn led on if second are prime
   if (isPrime(getSeconds()) == 1) {
     digitalWrite(ledPin, HIGH);
   } else {
     digitalWrite(ledPin, LOW);
   }
-  setColor(map(getHours(), 0, 24, 0, 255), 
+  
+  setColor(map(getHours(), 0, 23, 0, 255), 
            map(getMinutes(), 0, 60, 0, 255), 
            map(getSeconds(), 0, 60, 0, 255));
   delay(500);
