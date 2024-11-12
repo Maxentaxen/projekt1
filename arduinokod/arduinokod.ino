@@ -7,9 +7,10 @@
 // Init constants
 const int tempPin = A0;
 const int ledPin = 7;
-const int redPin = 8;
-const int greenPin = 9;
-const int bluePin = 10;
+const int rPin = 8;
+const int gPin = 9;
+const int bPin = 10;
+
 // Init global variables
 
 
@@ -27,9 +28,9 @@ void setup() {
   rtc.begin();
   u8g.setFont(u8g_font_unifont);
   pinMode(ledPin, OUTPUT);
-  pinMode(redPin, OUTPUT);
-  pinMode(greenPin, OUTPUT);
-  pinMode(bluePin, OUTPUT);
+  pinMode(rPin, OUTPUT);
+  pinMode(gPin, OUTPUT);
+  pinMode(bPin, OUTPUT);
 
   // Settings
   rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
@@ -37,8 +38,8 @@ void setup() {
 
 void loop() {
   // Constantly write time and temperature
-
   oledWrite(0, 10, "Time: " + getTime(), 0, 40, "Temp: " + String(getTemp()) + char(176) + "C");
+
   // Turn led on if the number of seconds is prime
   if (isPrime(getSeconds()) == 1) {
     digitalWrite(ledPin, HIGH);
@@ -47,9 +48,9 @@ void loop() {
   }
 
   // Set RGB led color to the current time
-  setColor(map(getHours(), 0, 24, 0, 255),
-           map(getMinutes(), 0, 60, 0, 255),
-           map(getSeconds(), 0, 60, 0, 255));
+  setColor(map(getHours(), 0, 24, 0, 255), // Map hours between 0-24 to an 8-bit value
+           map(getMinutes(), 0, 60, 0, 255), // Map minutes between 0-60 to an 8-bit value
+           map(getSeconds(), 0, 60, 0, 255)); // Map seconds between 0-60 to an 8-bit value
   delay(500);
 }
 
@@ -59,22 +60,26 @@ void loop() {
 * Parameters: Void
 * Returns: time in hh:mm:ss as String and if minutes or seconds are below 10, hh:0m:0s
 */
+
 String getTime() {
   DateTime now = rtc.now();
   String time = String(now.hour()) + ":";
+
   if (now.minute() < 10) {
-    time = time + "0" + String(now.minute()) + ":";
+    time = time + "0" + String(now.minute()) + ":"; // Changes hh:m:ss to hh:0m:ss if m < 10
   } else {
     time = time + String(now.minute()) + ":";
+
   }
   if (now.second() < 10) {
-    time = time + "0" + String(now.second());
+    time = time + "0" + String(now.second()); //Changes hh:mm:s to hh:mm:0s if s < 10
   } else {
     time = time + String(now.second());
   }
 
   return time;
 }
+
 
 /*
 * This function reads an analog pin connected to an analog temprature sensor and calculates the corresponding temp
@@ -99,6 +104,7 @@ float getTemp() {
   return T;
 }
 
+
 /*
 * This function takes two strings and coordinates and draws them to an oled screen at those locations
 *Parameters: x1, y1: coordinates of first text. text1: first text as a string
@@ -115,9 +121,10 @@ void oledWrite(int x1, int y1, String text1,
   } while (u8g.nextPage());
 }
 
+
 /*
 * This function takes a number and returns whether or not the number is prime 
-* Parameters: n: int to check for primality
+* Parameters: n: int to check for primality (0 - 120)
 * Returns: bool
 */
 
@@ -136,6 +143,7 @@ bool isPrime(int n) {
 /* This function returns only the seconds of the current time
 * Parameters: void
 * Returns: int
+* Returns: current second as int
 */
 
 int getSeconds() {
@@ -143,9 +151,22 @@ int getSeconds() {
   return int(now.second());
 }
 
+
+/* This function returns only the minutes of the current time
+* Parameters: void
+* Returns: current minute as int
+*/
+
+int getMinutes() {
+  DateTime now = rtc.now();
+  return int(now.hour());
+  return int(now.minute());
+}
+
+
 /* This function returns only the hours of the current time
 * Parameters: void
-* Returns: int
+* Returns: current hour as int
 */
 
 int getHours() {
@@ -153,24 +174,14 @@ int getHours() {
   return int(now.hour());
 }
 
-/* This function returns only the minutes of the current time
-* Parameters: void
-* Returns: int
-*/
-
-int getMinutes() {
-  DateTime now = rtc.now();
-  return int(now.minute());
-}
-
 
 /* This function takes an RGB value and makes an rgb led turn that color
-* Parameters: 3 ints: RGB values
+* Parameters: 3 ints that serve as the RGB values to set the LED to
 * returns: void
 */
 
-void setColor(int red, int green, int blue) {
-  analogWrite(redPin, red);
-  analogWrite(greenPin, green);
-  analogWrite(bluePin, blue);
+void setColor(int rval, int gval, int bval) {
+  analogWrite(rPin, rval);
+  analogWrite(gPin, gval);
+  analogWrite(bPin, bval);
 }
