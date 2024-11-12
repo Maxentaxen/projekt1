@@ -7,7 +7,9 @@
 // Init constants
 const int tempPin = A0;
 const int ledPin = 7;
-
+const int redPin = 8;
+const int greenPin = 9;
+const int bluePin = 10;
 // Init global variables
 
 
@@ -25,20 +27,26 @@ void setup() {
   rtc.begin();
   u8g.setFont(u8g_font_unifont);
   pinMode(ledPin, OUTPUT);
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
 
   // Settings
   rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
 
 void loop() {
-  oledWrite(40, 10, getTime(), 40, 40, String(getTemp()));
-
+  // Constantly write time and temperature
+  oledWrite(0, 10, "Time: "+ getTime(), 0, 40, "Temp: " + String(getTemp())); 
+  //Turn led on if second are prime
   if (isPrime(getSeconds()) == 1) {
     digitalWrite(ledPin, HIGH);
-  }
-  else {
+  } else {
     digitalWrite(ledPin, LOW);
   }
+  setColor(map(getHours(), 0, 24, 0, 255), 
+           map(getMinutes(), 0, 60, 0, 255), 
+           map(getSeconds(), 0, 60, 0, 255));
   delay(500);
 }
 
@@ -53,14 +61,12 @@ String getTime() {
   String time = String(now.hour()) + ":";
   if (now.minute() < 10) {
     time = time + "0" + String(now.minute()) + ":";
-  }
-  else {
+  } else {
     time = time + String(now.minute()) + ":";
   }
   if (now.second() < 10) {
     time = time + "0" + String(now.second());
-  }
-  else {
+  } else {
     time = time + String(now.second());
   }
 
@@ -91,8 +97,9 @@ float getTemp() {
 }
 
 /*
-* This function takes a string and draws it to an oled display
-*Parameters: - text: String to write to display
+* This function takes two strings and coordinates and draws them to an oled screen
+*Parameters: x1, y1: coordinates of first text. text1: first text as a string
+*            x2, y2: coordinates of second text. text2: second text as a string
 *Returns: void
 */
 
@@ -107,15 +114,15 @@ void oledWrite(int x1, int y1, String text1,
 
 /*
 * This function takes a number and returns whether or not the number is prime 
-* Parameters: - number: Int to check for primality
-* Returns: Bool
+* Parameters: n: int to check for primality
+* Returns: bool
 */
 
-bool isPrime (int n) {
-  int primes[4] = {2, 3, 5, 7};
+bool isPrime(int n) {
+  int primes[4] = { 2, 3, 5, 7 };
 
   for (int i = 0; i < 3; i++) {
-    if (n % primes[i] == 0 && n != primes[i] || n == 1){
+    if (n % primes[i] == 0 && n != primes[i] || n == 1) {
       return false;
     }
   }
@@ -124,11 +131,43 @@ bool isPrime (int n) {
 
 
 /* This function returns only the seconds of the current time
-* Parameters: - none
-* Returns: Int 
+* Parameters: void
+* Returns: int
 */
 
 int getSeconds() {
   DateTime now = rtc.now();
   return int(now.second());
+}
+
+/* This function returns only the hours of the current time
+* Parameters: void
+* Returns: int
+*/
+
+int getHours() {
+  DateTime now = rtc.now();
+  return int(now.hour());
+}
+
+/* This function returns only the minutes of the current time
+* Parameters: void
+* Returns: int
+*/
+
+int getMinutes() {
+  DateTime now = rtc.now();
+  return int(now.minute());
+}
+
+
+/* This function takes an RGB value and makes an rgb led turn that color
+* Parameters: 3 ints: RGB values
+* returns: void
+*/
+
+void setColor(int red, int green, int blue) {
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
 }
