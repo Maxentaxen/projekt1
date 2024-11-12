@@ -38,7 +38,8 @@ void setup() {
 
 void loop() {
   // Constantly write time and temperature
-  oledWrite(0, 10, "Time: " + getTime(), 0, 40, "Temp: " + String(getTemp()) + char(176) + "C");
+  oledWrite(0, 10, "Time: " + getTime(), 
+            0, 40, "Temp: " + String(getTemp()) + char(176) + "C");
 
   // Turn led on if the number of seconds is prime
   if (isPrime(getSeconds()) == 1) {
@@ -48,9 +49,9 @@ void loop() {
   }
 
   // Set RGB led color to the current time
-  setColor(map(getHours(), 0, 24, 0, 255), // Map hours between 0-24 to an 8-bit value
-           map(getMinutes(), 0, 60, 0, 255), // Map minutes between 0-60 to an 8-bit value
-           map(getSeconds(), 0, 60, 0, 255)); // Map seconds between 0-60 to an 8-bit value
+  setColor(map(getHours(), 0, 24, 0, 255), // Map hours between 0-24 to the value for red on the led
+           map(getMinutes(), 0, 60, 0, 255), // Map minutes between 0-60 to the value for green on the led
+           map(getSeconds(), 0, 60, 0, 255)); // Map seconds between 0-60 to the value for blue on the led
   delay(500);
 }
 
@@ -92,7 +93,9 @@ float getTemp() {
   int Vo;
   float R1 = 10000;  // value of R1 on board
   float logR2, R2, T;
-  float c1 = 0.001129148, c2 = 0.000234125, c3 = 0.0000000876741;
+  float c1 = 0.001129148, 
+        c2 = 0.000234125, 
+        c3 = 0.0000000876741;
 
 
   Vo = analogRead(tempPin);
@@ -142,7 +145,6 @@ bool isPrime(int n) {
 
 /* This function returns only the seconds of the current time
 * Parameters: void
-* Returns: int
 * Returns: current second as int
 */
 
@@ -159,7 +161,6 @@ int getSeconds() {
 
 int getMinutes() {
   DateTime now = rtc.now();
-  return int(now.hour());
   return int(now.minute());
 }
 
